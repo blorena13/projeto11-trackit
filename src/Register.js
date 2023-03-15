@@ -1,35 +1,35 @@
 import logoCompleta from "./assets/logo-completa.png";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
-export default function Login(){
-    return (
+export default function Register(){
+    return(
         <>
-        <PageContainer>
+        <RegisterPage>
             <div>
-            <img src={logoCompleta}></img>
-            <input type="email" placeholder="email"></input>
-            <input type="password" placeholder="senha"></input>
-            <button>Entrar</button>
-            <Link to={`/cadastro`}>
-            <p>Não tem uma conta? Cadastre-se!</p>
-            </Link>
-            </div>
-        </PageContainer>
+        <img src={logoCompleta}></img>
+        <input type="email" placeholder="email"></input>
+        <input type="password" placeholder="senha"></input>
+        <input type="text" placeholder="nome"></input>
+        <input type="url" placeholder="foto"></input>
+        <button>Cadastrar</button>
+        <Link to={`/`}>
+        <p>Já tem uma conta? Faça login!</p>
+        </Link>
+        </div>
+        </RegisterPage>
         </>
     )
 }
 
-const PageContainer = styled.div`
-
+const RegisterPage = styled.div`
 width: 375px;
 height: 100%;
-
 display: flex;
 justify-content: center;
 align-items: center;
 
-div{
+div {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -53,6 +53,7 @@ input{
     font-weight: 400;
     font-size: 19.98px;
     line-height: 25px;
+    
 }
 
 input::placeholder{
@@ -72,6 +73,7 @@ button{
     line-height: 26.22px;
     margin-bottom: 25px;
 }
+
 p{
     color:#52B6FF;
     font-family: 'Lexend Deca';
@@ -79,6 +81,6 @@ p{
     font-size: 13.98px;
     line-height: 17.47px;
     text-decoration-line: underline;
-    
+    margin-bottom: 25px;
 }
 `
