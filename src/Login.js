@@ -1,21 +1,57 @@
 import logoCompleta from "./assets/logo-completa.png";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useState, useContext } from "react";
+import { InfoContext } from "./context/InfoContext";
 
-export default function Login(){
+export default function Login() {
+
+    const navigate = useNavigate();
+    const {email, setEmail, image, setImage, password, setPassword} = useContext(InfoContext);
+
+    function login(e){
+        e.preventDefault();
+
+        const urlPost = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login";
+        const body = { email: email, password: password};
+
+        const promise = axios.post(urlPost, body)
+        promise.then(res => navigate("/hoje"));
+        promise.catch(err => alert(err.response.data.mensagem));
+    }
+
+
+
     return (
         <>
-        <PageContainer>
-            <div>
-            <img src={logoCompleta}></img>
-            <input type="email" placeholder="email"></input>
-            <input type="password" placeholder="senha"></input>
-            <button>Entrar</button>
-            <Link to={`/cadastro`}>
-            <p>Não tem uma conta? Cadastre-se!</p>
-            </Link>
-            </div>
-        </PageContainer>
+            <PageContainer>
+                <div>
+                    <form onSubmit={login}>
+                        <img src={logoCompleta}></img>
+                        <input 
+                        type="email" 
+                        value={email}
+                        placeholder="email"
+                        onChange={e=> setEmail(e.target.value)}
+                        ></input>
+
+                        <input 
+                        type="password"
+                        value={password}
+                        placeholder="senha"
+                        onChange={e=> setPassword(e.target.value)}
+                        ></input>
+
+                        <button type="submit">Entrar</button>
+                    </form>
+
+                    <Link to={`/cadastro`}>
+                        <p>Não tem uma conta? Cadastre-se!</p>
+                    </Link>
+                </div>
+            </PageContainer>
         </>
     )
 }
@@ -29,7 +65,7 @@ display: flex;
 justify-content: center;
 align-items: center;
 
-div{
+div, form{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -53,6 +89,7 @@ input{
     font-weight: 400;
     font-size: 19.98px;
     line-height: 25px;
+    outline: 0;
 }
 
 input::placeholder{

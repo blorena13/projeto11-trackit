@@ -1,23 +1,90 @@
 import logoCompleta from "./assets/logo-completa.png";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import axios, { Axios } from "axios";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { ThreeDots } from 'react-loader-spinner';
+import { useContext } from "react";
+import { InfoContext } from "./context/InfoContext";
 
-export default function Register(){
-    return(
+export default function Register() {
+
+    const {email, setEmail, image, setImage, password, setPassword} = useContext(InfoContext);
+    const navigate = useNavigate();
+    const [nome, setNome] = useState("");
+    const [disabled, setDisabled] = useState(true);
+
+    function cadastrar(e) {
+        e.preventDefault();
+
+        const urlPost = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up";
+        const body = { email: email, name: nome, image: image, password: password };
+        console.log(body);
+
+        const promise = axios.post(urlPost, body)
+        promise.then(res => navigate("/"));
+        promise.catch(err => alert(err.response.data.mensagem));
+
+    }
+
+    console.log(setDisabled)
+    return (
         <>
-        <RegisterPage>
-            <div>
-        <img src={logoCompleta}></img>
-        <input type="email" placeholder="email"></input>
-        <input type="password" placeholder="senha"></input>
-        <input type="text" placeholder="nome"></input>
-        <input type="url" placeholder="foto"></input>
-        <button>Cadastrar</button>
-        <Link to={`/`}>
-        <p>Já tem uma conta? Faça login!</p>
-        </Link>
-        </div>
-        </RegisterPage>
+            <RegisterPage>
+                <div>
+                    <img src={logoCompleta}></img>
+                    <form onSubmit={cadastrar}>
+                        <input
+                            type="email"
+                            value={email}
+                            placeholder="email"
+                            onChange={e => setEmail(e.target.value)}
+                        ></input>
+
+                        <input
+                            type="password"
+                            value={password}
+                            placeholder="senha"
+                            onChange={e => setPassword(e.target.value)}
+                        ></input>
+
+                        <input type="text"
+                            value={nome}
+                            placeholder="nome"
+                            onChange={e => setNome(e.target.value)}
+                        ></input>
+
+                        <input type="url"
+                            value={image}
+                            placeholder="foto"
+                            onChange={e => setImage(e.target.value)}
+                        ></input>
+
+
+                        <button type="submit"> { disabled ? <span 
+                        onClick={()=>
+                            setDisabled(true)
+                        }>Cadastrar</span>  
+                        :  <ThreeDots
+                                height="50"
+                                width="50"
+                                radius="9"
+                                color="#FFFFFF"
+                                ariaLabel="three-dots-loading"
+                                wrapperStyle={{}}
+                                wrapperClassName=""
+                                visible={true}
+                            /> }
+                           
+                        </button>
+                    </form>
+                    <Link to={`/`}>
+                        <p>Já tem uma conta? Faça login!</p>
+                    </Link>
+
+                </div>
+            </RegisterPage>
         </>
     )
 }
@@ -29,7 +96,7 @@ display: flex;
 justify-content: center;
 align-items: center;
 
-div {
+div, form {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -53,14 +120,14 @@ input{
     font-weight: 400;
     font-size: 19.98px;
     line-height: 25px;
-    
+    outline: 0;
 }
 
 input::placeholder{
     color:#DBDBDB;
 }
 
-button{
+button {
     width: 303px;
     height: 45px;
     background-color: #52B6FF;

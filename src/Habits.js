@@ -2,15 +2,22 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import styled from "styled-components";
 import logoPequena from "./assets/logo-simplificada.png";
 import CardHabits from "./CardHabits";
+import { useState, useContext } from "react";
+import { InfoContext } from "./context/InfoContext";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function Habits() {
+
+    const { image } = useContext(InfoContext);
+    
     return (
         <>
             <HabitsPage>
 
                 <NavBar>
                     <img src={logoPequena}></img>
-                    <img src={logoPequena}></img>
+                    <img src={image}></img>
                 </NavBar>
 
                 <ButtonHabits>
@@ -19,27 +26,35 @@ export default function Habits() {
                 </ButtonHabits>
 
                 <FeedHabits>
-                    <CardHabits/>
+                    <CardHabits />
 
                     <p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>
                 </FeedHabits>
 
-<Footer>
-<p>Hábitos</p>
-<div >
-<CircularProgressbar text="Hoje"
-background
-backgroundPadding={6}
-styles={buildStyles({
-  backgroundColor: "#3e98c7",
-  textColor: "#fff",
-  pathColor: "#fff",
-  trailColor: "transparent",
-})}
-/>
-</div>
-<p>Histórico</p>
-</Footer>
+                <Footer>
+                    <Link to={`/habitos`}>
+                        <button>Hábitos</button>
+                    </Link>
+
+                    <div >
+                        <Link to={`/hoje`}>
+                        <CircularProgressbar text="Hoje"
+                            background
+                            backgroundPadding={6}
+                            styles={buildStyles({
+                                backgroundColor: "#3e98c7",
+                                textColor: "#fff",
+                                pathColor: "#fff",
+                                trailColor: "transparent",
+                            })}
+                        />
+                        </Link>
+                    </div>
+
+                    <Link to={`/historico`}>
+                    <button>Histórico</button>
+                    </Link>
+                </Footer>
 
             </HabitsPage>
         </>
@@ -152,12 +167,14 @@ div {
     }
 }
 
-p{
+button{
     font-family: Lexend Deca;
     font-weight: 400;
     font-size: 17.98px;
     line-height: 22.47px;
     color:#52B6FF;
+    border: none;
+    background: #FFFFFF;
 }
 
 `

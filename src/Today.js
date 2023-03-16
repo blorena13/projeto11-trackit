@@ -2,14 +2,20 @@ import styled from "styled-components";
 import logoPequena from "./assets/logo-simplificada.png";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import CardToday from "./CardToday";
+import { useState, useContext } from "react";
+import { InfoContext } from "./context/InfoContext";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function Today() {
+
+    const {image} = useContext(InfoContext);
     return (
         <>
             <TodayPage>
                 <NavBar>
                     <img src={logoPequena}></img>
-                    <img src={logoPequena}></img>
+                    <img src={image}></img>
                 </NavBar>
 
                 <TodayHabits>
@@ -22,8 +28,10 @@ export default function Today() {
                 </FeedToday>
 
                 <Footer>
-                    <p>Hábitos</p>
+                    <Link to={`/habitos`}><button>Hábitos</button></Link>
+                    
                     <div >
+                        <Link to={`/hoje`}>
                         <CircularProgressbar text="Hoje"
                             background
                             backgroundPadding={6}
@@ -34,8 +42,11 @@ export default function Today() {
                                 trailColor: "transparent",
                             })}
                         />
+                        </Link>
                     </div>
-                    <p>Histórico</p>
+                    <Link to={`/historico`}>
+                    <button>Histórico</button>
+                    </Link>
                 </Footer>
 
             </TodayPage>
@@ -89,6 +100,7 @@ position: fixed;
 bottom: 0;
 left: 0;
 
+
 div {
     width:91px;
     height: 91px;
@@ -103,12 +115,14 @@ div {
     }
 }
 
-p{
+button{
     font-family: Lexend Deca;
     font-weight: 400;
     font-size: 17.98px;
     line-height: 22.47px;
     color:#52B6FF;
+    border: none;
+    background: #FFFFFF;
 }
 
 `

@@ -1,15 +1,22 @@
 import styled from "styled-components";
 import logoPequena from "./assets/logo-simplificada.png";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import { useState, useContext } from "react";
+import { InfoContext } from "./context/InfoContext";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function History() {
+
+    const { image } = useContext(InfoContext);
+
     return (
         <>
             <HistoryPage>
 
                 <NavBar>
                     <img src={logoPequena}></img>
-                    <img src={logoPequena}></img>
+                    <img src={image}></img>
                 </NavBar>
 
                 <FeedHistory>
@@ -18,8 +25,11 @@ export default function History() {
                 </FeedHistory>
 
                 <Footer>
-                    <p>Hábitos</p>
-                    <div >
+                    <Link to={`/habitos`}>
+                        <button>Hábitos</button>
+                    </Link>
+
+                    <div > <Link to={`/hoje`}>
                         <CircularProgressbar text="Hoje"
                             background
                             backgroundPadding={6}
@@ -30,8 +40,11 @@ export default function History() {
                                 trailColor: "transparent",
                             })}
                         />
+                    </Link>
                     </div>
-                    <p>Histórico</p>
+                    <Link to={`/historico`}></Link>
+                    <button>Histórico</button>
+
                 </Footer>
 
             </HistoryPage>
@@ -98,12 +111,14 @@ div {
     }
 }
 
-p{
+button{
     font-family: Lexend Deca;
     font-weight: 400;
     font-size: 17.98px;
     line-height: 22.47px;
     color:#52B6FF;
+    border: none;
+    background: #FFFFFF;
 }
 
 `
