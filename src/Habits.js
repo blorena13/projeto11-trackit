@@ -9,35 +9,46 @@ import { Link } from "react-router-dom";
 
 export default function Habits() {
 
-    const { image } = useContext(InfoContext);
+    const { image, tarefa, setTarefa } = useContext(InfoContext);
+    const [textInput, setTextInput] = useState("");
+
+    function adicionarTarefa(){
+        const novaTarefa = [...tarefa, textInput];
+        setTarefa(novaTarefa);
+        setTextInput("");
+    }
+
     
     return (
         <>
             <HabitsPage>
 
-                <NavBar>
+                <NavBar data-test="header">
                     <img src={logoPequena}></img>
                     <img src={image}></img>
                 </NavBar>
 
                 <ButtonHabits>
                     <p>Meus hábitos</p>
-                    <button>+</button>
+                    <button  data-test="habit-create-btn" onClick={adicionarTarefa} >+</button>
                 </ButtonHabits>
 
                 <FeedHabits>
-                    <CardHabits />
+                    {tarefa.map((task) =>
+                    <CardHabits task={task} textInput={textInput} setTextInput={setTextInput} />
+                    )}
+                    
 
                     <p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>
                 </FeedHabits>
 
-                <Footer>
-                    <Link to={`/habitos`}>
+                <Footer data-test="menu">
+                    <Link data-test="habit-link" to={`/habitos`}>
                         <button>Hábitos</button>
                     </Link>
 
                     <div >
-                        <Link to={`/hoje`}>
+                        <Link  data-test="today-link" to={`/hoje`}>
                         <CircularProgressbar text="Hoje"
                             background
                             backgroundPadding={6}
@@ -51,7 +62,7 @@ export default function Habits() {
                         </Link>
                     </div>
 
-                    <Link to={`/historico`}>
+                    <Link data-test="history-link" to={`/historico`}>
                     <button>Histórico</button>
                     </Link>
                 </Footer>

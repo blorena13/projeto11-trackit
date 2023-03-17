@@ -36,6 +36,7 @@ export default function Register() {
                     <img src={logoCompleta}></img>
                     <form onSubmit={cadastrar}>
                         <input
+                        data-test="email-input"
                             type="email"
                             value={email}
                             placeholder="email"
@@ -43,26 +44,31 @@ export default function Register() {
                         ></input>
 
                         <input
+                        data-test="password-input"
                             type="password"
                             value={password}
                             placeholder="senha"
                             onChange={e => setPassword(e.target.value)}
                         ></input>
 
-                        <input type="text"
+                        <input 
+                        data-test="user-name-input"
+                        type="text"
                             value={nome}
                             placeholder="nome"
                             onChange={e => setNome(e.target.value)}
                         ></input>
 
-                        <input type="url"
+                        <input 
+                        data-test="user-image-input"
+                        type="url"
                             value={image}
                             placeholder="foto"
                             onChange={e => setImage(e.target.value)}
                         ></input>
 
 
-                        <button type="submit"> { disabled ? <span 
+                        <button data-test="signup-btn" type="submit"> { disabled ? <span 
                         onClick={()=>
                             setDisabled(true)
                         }>Cadastrar</span>  
@@ -79,7 +85,7 @@ export default function Register() {
                            
                         </button>
                     </form>
-                    <Link to={`/`}>
+                    <Link data-test="login-link" to={`/`}>
                         <p>Já tem uma conta? Faça login!</p>
                     </Link>
 

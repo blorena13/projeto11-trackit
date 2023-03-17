@@ -14,7 +14,7 @@ export default function History() {
         <>
             <HistoryPage>
 
-                <NavBar>
+                <NavBar data-test="header">
                     <img src={logoPequena}></img>
                     <img src={image}></img>
                 </NavBar>
@@ -24,12 +24,12 @@ export default function History() {
                     <p>Em breve você poderá ver o histórico dos seus hábitos aqui!</p>
                 </FeedHistory>
 
-                <Footer>
-                    <Link to={`/habitos`}>
+                <Footer data-test="menu">
+                    <Link data-test="habit-link" to={`/habitos`}>
                         <button>Hábitos</button>
                     </Link>
 
-                    <div > <Link to={`/hoje`}>
+                    <div > <Link data-test="today-link" to={`/hoje`}>
                         <CircularProgressbar text="Hoje"
                             background
                             backgroundPadding={6}
@@ -42,8 +42,9 @@ export default function History() {
                         />
                     </Link>
                     </div>
-                    <Link to={`/historico`}></Link>
+                    <Link data-test="history-link" to={`/historico`}>
                     <button>Histórico</button>
+                    </Link>
 
                 </Footer>
 

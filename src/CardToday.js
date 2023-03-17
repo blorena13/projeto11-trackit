@@ -4,16 +4,16 @@ import correto from "./assets/correto.png"
 export default function CardToday() {
     return (
         <>
-            <Card>
+            <Card data-test="today-habit-container">
                 <div>
-                    <p>Ler 1 capítulo de livro</p>
+                    <p data-test="today-habit-name">Ler 1 capítulo de livro</p>
                     <span>
-                    <p>Sequência atual: 3 dias</p>
-                    <p>Seu recorde: 5 dias</p>
+                    <p data-test="today-habit-sequence">Sequência atual: 3 dias</p>
+                    <p data-test="today-habit-record">Seu recorde: 5 dias</p>
                     </span>
 
                 </div>
-                <button> <img src={correto}></img></button>
+                <button data-test="today-habit-check-btn"> <img src={correto}></img></button>
             </Card>
         </>
     )

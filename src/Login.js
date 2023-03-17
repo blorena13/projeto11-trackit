@@ -30,7 +30,8 @@ export default function Login() {
                 <div>
                     <form onSubmit={login}>
                         <img src={logoCompleta}></img>
-                        <input 
+                        <input
+                        data-test="email-input"
                         type="email" 
                         value={email}
                         placeholder="email"
@@ -38,16 +39,17 @@ export default function Login() {
                         ></input>
 
                         <input 
+                        data-test="password-input"
                         type="password"
                         value={password}
                         placeholder="senha"
                         onChange={e=> setPassword(e.target.value)}
                         ></input>
 
-                        <button type="submit">Entrar</button>
+                        <button data-test="login-btn" type="submit">Entrar</button>
                     </form>
 
-                    <Link to={`/cadastro`}>
+                    <Link data-test="signup-link" to={`/cadastro`}>
                         <p>Não tem uma conta? Cadastre-se!</p>
                     </Link>
                 </div>

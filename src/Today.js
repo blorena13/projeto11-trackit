@@ -13,25 +13,25 @@ export default function Today() {
     return (
         <>
             <TodayPage>
-                <NavBar>
+                <NavBar data-test="header">
                     <img src={logoPequena}></img>
                     <img src={image}></img>
                 </NavBar>
 
                 <TodayHabits>
-                    <div>Segunda, 17/05</div>
-                    <span>Nenhum hábito concluído ainda</span>
+                    <div data-test="today">Segunda, 17/05</div>
+                    <span data-test="today-counter">Nenhum hábito concluído ainda</span>
                 </TodayHabits>
 
                 <FeedToday>
                     <CardToday/>
                 </FeedToday>
 
-                <Footer>
-                    <Link to={`/habitos`}><button>Hábitos</button></Link>
+                <Footer data-test="menu">
+                    <Link data-test="habit-link" to={`/habitos`}><button>Hábitos</button></Link>
                     
                     <div >
-                        <Link to={`/hoje`}>
+                        <Link  data-test="today-link" to={`/hoje`}>
                         <CircularProgressbar text="Hoje"
                             background
                             backgroundPadding={6}
@@ -44,7 +44,7 @@ export default function Today() {
                         />
                         </Link>
                     </div>
-                    <Link to={`/historico`}>
+                    <Link data-test="history-link" to={`/historico`}>
                     <button>Histórico</button>
                     </Link>
                 </Footer>
