@@ -22,7 +22,8 @@ export default function Today() {
 
         const promise = axios.get(url, config);
         promise.then((res) => {
-            console.log(res.data);
+            setTarefaGet(res.data);
+            console.log(tarefaGet)
         })
     })
 
@@ -42,7 +43,12 @@ export default function Today() {
                 </TodayHabits>
 
                 <FeedToday>
-                    <CardToday tarefa={tarefaGet} />
+                    {
+                        tarefaGet.map((t) =>
+                        <CardToday tarefa={t} />
+                        )
+                    }
+                    
                 </FeedToday>
 
                 <Footer data-test="menu">
@@ -76,7 +82,6 @@ const TodayPage = styled.div`
 position: absolute;
 background-color: #E5E5E5;
 width: 375px;
-height: 100%;
 display: flex;
 flex-direction: column;
 align-items: center;
@@ -171,4 +176,5 @@ span {
 
 const FeedToday = styled.div`
 width: 340px;
+margin-bottom: 70px;
 `

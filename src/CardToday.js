@@ -5,6 +5,7 @@ export default function CardToday({tarefa}) {
     return (
         <>
             <Card data-test="today-habit-container">
+                
                 <div>
                     <p data-test="today-habit-name"> {tarefa.name} </p>
                     <span>
@@ -26,6 +27,7 @@ justify-content: space-between;
 width: 310px;
 padding: 10px;
 border-radius:5px;
+margin-bottom: 10px;
 
 
 div{

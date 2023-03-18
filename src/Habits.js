@@ -13,12 +13,25 @@ export default function Habits() {
     const { image, tarefa, setTarefa, tarefaCriada, token } = useContext(InfoContext);
     const [textInput, setTextInput] = useState("");
     const [habitos, setHabitos] =  useState([]);
-    console.log(habitos);
+    const [mostrarCriar, setMostrarCriar] = useState(false);
+    const [selected, setSelected] = useState([]);
+    const selecionado = (selected);
+
+    const handleButton = (selecionado) => {
+        if (selected.includes(selecionado)) {
+            setSelected(selected.filter((buttonId) => buttonId !== selecionado))
+
+        } else {
+            setSelected([...selected, selecionado]);
+        }
+    }
+
 
     function adicionarTarefa(){
         const novaTarefaArray = [...tarefa, textInput];
         setTarefa(novaTarefaArray);
         setTextInput("");
+        setMostrarCriar(false);
     }
 
     useEffect(() => {
@@ -35,9 +48,8 @@ export default function Habits() {
 
     }, [])
 
-    
+    console.log(habitos)
 
-    
     return (
         <>
             <HabitsPage>
@@ -49,12 +61,26 @@ export default function Habits() {
 
                 <ButtonHabits>
                     <p>Meus hábitos</p>
-                    <button  data-test="habit-create-btn" onClick={adicionarTarefa} >+</button>
+                    <button  data-test="habit-create-btn" 
+                    onClick={()=> 
+                    setMostrarCriar(true)} 
+                    >+</button>
                 </ButtonHabits>
 
                 <FeedHabits>
+                    <CardHabits 
+                    handleButton={handleButton} 
+                    selected={selected} 
+                    selecionado={selecionado} 
+                    MostrarCriar={mostrarCriar} 
+                    setMostrarCriar={setMostrarCriar} 
+                    adicionarTarefa={adicionarTarefa} 
+                    textInput={textInput} 
+                    setTextInput={setTextInput} />
+
                     {habitos.map((task) =>
-                    <LittleCard name={task.name}  />
+                    <LittleCard 
+                    name={task.name}  />
                     )}
                     
                     <p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>
@@ -94,7 +120,6 @@ const HabitsPage = styled.div`
 position: absolute;
 background-color: #E5E5E5;
 width: 375px;
-height: 100%;
 display: flex;
 flex-direction: column;
 align-items: center;

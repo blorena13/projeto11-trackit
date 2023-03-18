@@ -5,56 +5,77 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
 import { InfoContext } from "./context/InfoContext";
+import { ThreeDots } from "react-loader-spinner";
 
 export default function Login() {
 
     const navigate = useNavigate();
-    const {email, setEmail, image, setImage, password, setPassword, token, setToken} = useContext(InfoContext);
-    console.log(token)
-    function login(e){
+    const { email, setEmail, image, setImage, password, setPassword, token, setToken, setDisabled, disabled } = useContext(InfoContext);
+
+
+    function login(e) {
         e.preventDefault();
 
         const urlPost = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login";
-        const body = { email: email, password: password};
+        const body = { email: email, password: password };
 
         const promise = axios.post(urlPost, body)
-        promise.then(res => { 
-            setImage(res.data.image)
-            setToken(res.data.token)
-            navigate("/hoje")
-          
-        }
-            
-           
-            );
-        promise.catch(err => alert(err.response.data.mensagem));
+        promise.then(res => {
+            setImage(res.data.image);
+            setToken(res.data.token);
+            setDisabled(true);
+            navigate("/hoje");
+
+        });
+        promise.catch(err => {
+            alert(err.response.data.mensagem);
+            setDisabled(false);
+            });
     }
+
+    console.log(disabled)
 
 
 
     return (
         <>
-            <PageContainer>
+            <PageContainer disabled={disabled}>
                 <div>
                     <form onSubmit={login}>
                         <img src={logoCompleta}></img>
                         <input
-                        data-test="email-input"
-                        type="email" 
-                        value={email}
-                        placeholder="email"
-                        onChange={e=> setEmail(e.target.value)}
+                            data-test="email-input"
+                            type="email"
+                            value={email}
+                            placeholder="email"
+                            onChange={e => setEmail(e.target.value)}
+                            disabled={disabled}
                         ></input>
 
-                        <input 
-                        data-test="password-input"
-                        type="password"
-                        value={password}
-                        placeholder="senha"
-                        onChange={e=> setPassword(e.target.value)}
+                        <input
+                            data-test="password-input"
+                            type="password"
+                            value={password}
+                            placeholder="senha"
+                            onChange={e => setPassword(e.target.value)}
+                            disabled={disabled}
                         ></input>
 
-                        <button data-test="login-btn" type="submit">Entrar</button>
+                        <button 
+                        data-test="login-btn" 
+                        type="submit" 
+                        onClick={() => setDisabled(true)}>
+                            {disabled ? 
+                            <ThreeDots
+                                height="40"
+                                width="50"
+                                radius="9"
+                                color="#FFFFFF"
+                                ariaLabel="three-dots-loading"
+                                wrapperStyle={{}}
+                                wrapperClassName=""
+                                visible={true}
+                            /> : "Entrar"} </button>
                     </form>
 
                     <Link data-test="signup-link" to={`/cadastro`}>
@@ -118,6 +139,7 @@ button{
     font-size: 20.98px;
     line-height: 26.22px;
     margin-bottom: 25px;
+    opacity: ${({disabled}) => disabled === true ? 0.7 : 'none'} ;
 }
 p{
     color:#52B6FF;

@@ -5,25 +5,11 @@ import { InfoContext } from "./context/InfoContext";
 import botoes from "./botoes";
 import LittleCard from "./LittleCard";
 
-export default function CardHabits({ textInput, setTextInput }) {
+export default function CardHabits({ textInput, setTextInput, adicionarTarefa, MostrarCriar, setMostrarCriar, selecionado, handleButton , selected }) {
 
-    const { token, tarefaCriada, setTarefaCriada } = useContext(InfoContext);
-
-    const [selected, setSelected] = useState([]);
-    const selecionado = (selected);
+    const { token } = useContext(InfoContext);
     const [novaTarefa, setNovaTarefa] = useState([]);
     
-
-
-    const handleButton = (selecionado) => {
-        if (selected.includes(selecionado)) {
-            setSelected(selected.filter((buttonId) => buttonId !== selecionado))
-
-        } else {
-            setSelected([...selected, selecionado]);
-        }
-    }
-
 
     function tarefaServidor() {
        
@@ -38,7 +24,6 @@ export default function CardHabits({ textInput, setTextInput }) {
 
         const promise = axios.post(urlPost, body, config);
         promise.then(res => {
-            setTarefaCriada(true)
             setNovaTarefa(res.data)
         }
 
@@ -47,12 +32,14 @@ export default function CardHabits({ textInput, setTextInput }) {
     }
 
     
-    console.log(novaTarefa)
+    
 
     return (
         <>
         <SuperContainer>
-            <CardContainer data-test="habit-create-container" tarefaCriada={tarefaCriada}>
+            <CardContainer 
+            data-test="habit-create-container" 
+            MostrarCriar={MostrarCriar}>
                 <Card >
                     <input data-test="habit-name-input"
                         value={textInput}
@@ -78,19 +65,23 @@ export default function CardHabits({ textInput, setTextInput }) {
                 </Card>
                 <OptionCard>
                     <div>
-                        <button data-test="habit-create-cancel-btn"  >Cancelar</button>
-                        <button data-test="habit-create-save-btn" onClick={() => {
-                            tarefaServidor()
-                            setTarefaCriada(true)
-                        }
+                        <button 
+                        data-test="habit-create-cancel-btn" 
+                        onClick={()=> 
+                        setMostrarCriar(false)
+                        } >Cancelar</button>
 
+                        <button 
+                        data-test="habit-create-save-btn" 
+                        onClick={() => {
+                            tarefaServidor()
+                            adicionarTarefa()
+                        }
                         }>Salvar</button>
                     </div>
                 </OptionCard>
 
             </CardContainer>
-
-
             
             </SuperContainer>
         </>
@@ -103,7 +94,7 @@ background-color: red;
 
 const CardContainer = styled.div`
 background-color: #FFFFFF;
-display: ${({ tarefaCriada }) => tarefaCriada === true ? 'none' : 'flex'};
+display: ${({ MostrarCriar}) => MostrarCriar === true ? 'flex' : 'none'};
 flex-direction: column;
 align-items: center;
 

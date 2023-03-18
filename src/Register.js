@@ -10,10 +10,9 @@ import { InfoContext } from "./context/InfoContext";
 
 export default function Register() {
 
-    const {email, setEmail, image, setImage, password, setPassword} = useContext(InfoContext);
+    const { email, setEmail, image, setImage, password, setPassword, disabled, setDisabled } = useContext(InfoContext);
     const navigate = useNavigate();
     const [nome, setNome] = useState("");
-    const [disabled, setDisabled] = useState(true);
 
     function cadastrar(e) {
         e.preventDefault();
@@ -24,56 +23,63 @@ export default function Register() {
 
         const promise = axios.post(urlPost, body)
         promise.then(res => navigate("/"));
-        promise.catch(err => alert(err.response.data.mensagem));
+        promise.catch(
+            err => {
+                alert(err.response.data.mensagem);
+                setDisabled(false);
+            });
 
     }
-
     console.log(setDisabled)
     return (
         <>
-            <RegisterPage>
+            <RegisterPage disabled={disabled}>
                 <div>
                     <img src={logoCompleta}></img>
                     <form onSubmit={cadastrar}>
                         <input
-                        data-test="email-input"
+                            data-test="email-input"
                             type="email"
                             value={email}
                             placeholder="email"
                             onChange={e => setEmail(e.target.value)}
+                            disabled={disabled}
                         ></input>
 
                         <input
-                        data-test="password-input"
+                            data-test="password-input"
                             type="password"
                             value={password}
                             placeholder="senha"
                             onChange={e => setPassword(e.target.value)}
+                            disabled={disabled}
                         ></input>
 
-                        <input 
-                        data-test="user-name-input"
-                        type="text"
+                        <input
+                            data-test="user-name-input"
+                            type="text"
                             value={nome}
                             placeholder="nome"
                             onChange={e => setNome(e.target.value)}
+                            disabled={disabled}
                         ></input>
 
-                        <input 
-                        data-test="user-image-input"
-                        type="Imagem"
+                        <input
+                            data-test="user-image-input"
+                            type="Imagem"
                             value={image}
                             placeholder="foto"
                             onChange={e => setImage(e.target.value)}
+                            disabled={disabled}
                         ></input>
 
 
-                        <button data-test="signup-btn" type="submit"> { disabled ? <span 
-                        onClick={()=>
-                            setDisabled(true)
-                        }>Cadastrar</span>  
-                        :  <ThreeDots
-                                height="50"
+                        <button 
+                        data-test="signup-btn" 
+                        type="submit" 
+                        onClick={() => setDisabled(true)}> {disabled ? 
+                             <ThreeDots
+                                height="40"
                                 width="50"
                                 radius="9"
                                 color="#FFFFFF"
@@ -81,8 +87,10 @@ export default function Register() {
                                 wrapperStyle={{}}
                                 wrapperClassName=""
                                 visible={true}
-                            /> }
-                           
+                            />  : <span>Cadastrar</span>
+                        
+                        }
+
                         </button>
                     </form>
                     <Link data-test="login-link" to={`/`}>
@@ -145,6 +153,7 @@ button {
     font-size: 20.98px;
     line-height: 26.22px;
     margin-bottom: 25px;
+    opacity: ${({disabled}) => disabled === true ? 0.7 : 'none'};
 }
 
 p{
