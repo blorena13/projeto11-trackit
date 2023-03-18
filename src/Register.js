@@ -61,7 +61,7 @@ export default function Register() {
 
                         <input 
                         data-test="user-image-input"
-                        type="url"
+                        type="Imagem"
                             value={image}
                             placeholder="foto"
                             onChange={e => setImage(e.target.value)}

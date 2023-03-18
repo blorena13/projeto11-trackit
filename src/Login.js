@@ -9,8 +9,8 @@ import { InfoContext } from "./context/InfoContext";
 export default function Login() {
 
     const navigate = useNavigate();
-    const {email, setEmail, image, setImage, password, setPassword} = useContext(InfoContext);
-
+    const {email, setEmail, image, setImage, password, setPassword, token, setToken} = useContext(InfoContext);
+    console.log(token)
     function login(e){
         e.preventDefault();
 
@@ -18,7 +18,15 @@ export default function Login() {
         const body = { email: email, password: password};
 
         const promise = axios.post(urlPost, body)
-        promise.then(res => navigate("/hoje"));
+        promise.then(res => { 
+            setImage(res.data.image)
+            setToken(res.data.token)
+            navigate("/hoje")
+          
+        }
+            
+           
+            );
         promise.catch(err => alert(err.response.data.mensagem));
     }
 

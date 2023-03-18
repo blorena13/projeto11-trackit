@@ -1,15 +1,15 @@
 import styled from "styled-components";
 import correto from "./assets/correto.png"
 
-export default function CardToday() {
+export default function CardToday({tarefa}) {
     return (
         <>
             <Card data-test="today-habit-container">
                 <div>
-                    <p data-test="today-habit-name">Ler 1 capítulo de livro</p>
+                    <p data-test="today-habit-name"> {tarefa.name} </p>
                     <span>
-                    <p data-test="today-habit-sequence">Sequência atual: 3 dias</p>
-                    <p data-test="today-habit-record">Seu recorde: 5 dias</p>
+                    <p data-test="today-habit-sequence">Sequência atual: {tarefa.currentSequence} dias</p>
+                    <p data-test="today-habit-record">Seu recorde: {tarefa.highestSequence} dias</p>
                     </span>
 
                 </div>

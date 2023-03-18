@@ -2,21 +2,40 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import styled from "styled-components";
 import logoPequena from "./assets/logo-simplificada.png";
 import CardHabits from "./CardHabits";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { InfoContext } from "./context/InfoContext";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import LittleCard from "./LittleCard";
 
 export default function Habits() {
 
-    const { image, tarefa, setTarefa } = useContext(InfoContext);
+    const { image, tarefa, setTarefa, tarefaCriada, token } = useContext(InfoContext);
     const [textInput, setTextInput] = useState("");
+    const [habitos, setHabitos] =  useState([]);
+    console.log(habitos);
 
     function adicionarTarefa(){
-        const novaTarefa = [...tarefa, textInput];
-        setTarefa(novaTarefa);
+        const novaTarefaArray = [...tarefa, textInput];
+        setTarefa(novaTarefaArray);
         setTextInput("");
     }
+
+    useEffect(() => {
+        const url = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
+
+        const config = {
+            headers:
+                { Authorization: `Bearer ${token}` }
+        }
+
+        const promise = axios.get(url, config)
+        promise.then(res => setHabitos(res.data))
+        promise.catch(err => alert(err.response.data.mensagem))
+
+    }, [])
+
+    
 
     
     return (
@@ -34,11 +53,10 @@ export default function Habits() {
                 </ButtonHabits>
 
                 <FeedHabits>
-                    {tarefa.map((task) =>
-                    <CardHabits task={task} textInput={textInput} setTextInput={setTextInput} />
+                    {habitos.map((task) =>
+                    <LittleCard name={task.name}  />
                     )}
                     
-
                     <p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>
                 </FeedHabits>
 

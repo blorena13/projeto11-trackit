@@ -2,14 +2,32 @@ import styled from "styled-components";
 import logoPequena from "./assets/logo-simplificada.png";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import CardToday from "./CardToday";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { InfoContext } from "./context/InfoContext";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
 export default function Today() {
 
-    const {image} = useContext(InfoContext);
+    const [tarefaGet, setTarefaGet] = useState([]);
+    const { image, token } = useContext(InfoContext);
+
+    useEffect(() => {
+
+        const url = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today`;
+        const config = {
+            headers:
+                { Authorization: `Bearer ${token}` }
+        }
+
+        const promise = axios.get(url, config);
+        promise.then((res) => {
+            console.log(res.data);
+        })
+    })
+
+   
+
     return (
         <>
             <TodayPage>
@@ -24,28 +42,28 @@ export default function Today() {
                 </TodayHabits>
 
                 <FeedToday>
-                    <CardToday/>
+                    <CardToday tarefa={tarefaGet} />
                 </FeedToday>
 
                 <Footer data-test="menu">
                     <Link data-test="habit-link" to={`/habitos`}><button>Hábitos</button></Link>
-                    
+
                     <div >
-                        <Link  data-test="today-link" to={`/hoje`}>
-                        <CircularProgressbar text="Hoje"
-                            background
-                            backgroundPadding={6}
-                            styles={buildStyles({
-                                backgroundColor: "#3e98c7",
-                                textColor: "#fff",
-                                pathColor: "#fff",
-                                trailColor: "transparent",
-                            })}
-                        />
+                        <Link data-test="today-link" to={`/hoje`}>
+                            <CircularProgressbar text="Hoje"
+                                background
+                                backgroundPadding={6}
+                                styles={buildStyles({
+                                    backgroundColor: "#3e98c7",
+                                    textColor: "#fff",
+                                    pathColor: "#fff",
+                                    trailColor: "transparent",
+                                })}
+                            />
                         </Link>
                     </div>
                     <Link data-test="history-link" to={`/historico`}>
-                    <button>Histórico</button>
+                        <button>Histórico</button>
                     </Link>
                 </Footer>
 

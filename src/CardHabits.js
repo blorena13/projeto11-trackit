@@ -1,55 +1,57 @@
-import { useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import styled from "styled-components";
-import lixeira from "./assets/lixeira.png";
 import axios from "axios";
+import { InfoContext } from "./context/InfoContext";
+import botoes from "./botoes";
+import LittleCard from "./LittleCard";
 
-export default function CardHabits({ textInput, setTextInput, task }) {
+export default function CardHabits({ textInput, setTextInput }) {
+
+    const { token, tarefaCriada, setTarefaCriada } = useContext(InfoContext);
 
     const [selected, setSelected] = useState([]);
-    const [cor, setCor] = useState('#FFFFFF');
-    const [corLetra, setCorLetra] = useState('#DBDBDB');
+    const selecionado = (selected);
+    const [novaTarefa, setNovaTarefa] = useState([]);
+    
 
-    const [tarefaCriada, setTarefaCriada] = useState(false);
-    const botoes = [
-        { id: 0, dia: "D", semana: "Domingo" },
-        { id: 1, dia: "S", semana: "Segunda-feira" },
-        { id: 2, dia: "T", semana: "Terça-feira" },
-        { id: 3, dia: "Q", semana: "Quarta-feira" },
-        { id: 4, dia: "Q", semana: "Quinta-feira" },
-        { id: 5, dia: "S", semana: "Sexta-feira" },
-        { id: 6, dia: "S", semana: "Sábado" }
-    ]
 
-    function cliqueBotao(e) {
-        const novaLetra = corLetra === '#DBDBDB' ? '#FFFFFF' : '#DBDBDB';
-        setCorLetra(novaLetra);
-        e.target.style.color = novaLetra;
+    const handleButton = (selecionado) => {
+        if (selected.includes(selecionado)) {
+            setSelected(selected.filter((buttonId) => buttonId !== selecionado))
 
-        const novaCor = cor === '#FFFFFF' ? '#CFCFCF' : '#FFFFFF';
-        setCor(novaCor);
-        e.target.style.background = novaCor;
+        } else {
+            setSelected([...selected, selecionado]);
+        }
     }
 
 
-    function tarefaServidor(e) {
-        e.preventDefault();
+    function tarefaServidor() {
+       
         const config = {
             headers:
-                { Authorization: `Bearer TOKEN` }
+                { Authorization: `Bearer ${token}` }
         }
 
         const urlPost = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
-        const body = { name: textInput, days: "" };
+        const body = { name: textInput, days: selecionado };
+        console.log(body);
 
         const promise = axios.post(urlPost, body, config);
-        promise.then(setTarefaCriada(true));
+        promise.then(res => {
+            setTarefaCriada(true)
+            setNovaTarefa(res.data)
+        }
+
+        );
         promise.catch(err => alert(err.response.data.mensagem));
     }
 
-    console.log(tarefaServidor)
+    
+    console.log(novaTarefa)
 
     return (
         <>
+        <SuperContainer>
             <CardContainer data-test="habit-create-container" tarefaCriada={tarefaCriada}>
                 <Card >
                     <input data-test="habit-name-input"
@@ -60,15 +62,24 @@ export default function CardHabits({ textInput, setTextInput, task }) {
                     ></input>
                     <div>
                         {botoes.map((b) =>
-                            <button data-test="habit-day" onClick={cliqueBotao}> {b.dia} </button>
+                            <button style={{
+                                backgroundColor: selected.includes(b.id) ? '#CFCFCF' : '#FFFFFF',
+                                color: selected.includes(b.id) ? '#FFFFFF' : '#CFCFCF'
+                            }} data-test="habit-day"
+                                onClick={() => {
+                                    handleButton(b.id);
+                                    selected.includes(b.id);
+                                }
+                                }
+                            > {b.dia} </button>
                         )}
 
                     </div>
                 </Card>
                 <OptionCard>
                     <div>
-                        <button data-test="habit-create-cancel-btn" >Cancelar</button>
-                        <button  data-test="habit-create-save-btn" onClick={() => {
+                        <button data-test="habit-create-cancel-btn"  >Cancelar</button>
+                        <button data-test="habit-create-save-btn" onClick={() => {
                             tarefaServidor()
                             setTarefaCriada(true)
                         }
@@ -79,25 +90,16 @@ export default function CardHabits({ textInput, setTextInput, task }) {
 
             </CardContainer>
 
-            <LittleContainer data-test="habit-container" tarefaCriada={tarefaCriada}>
-                <LittleCard>
-                    <span>
-                        <p data-test="habit-name">{task}</p>
-                        <div>
-                            {
-                                botoes.map((b) =>
-                                    <button>{b.dia}</button>
-                                )}
 
-                        </div>
-                    </span>
-                    <img data-test="habit-delete-btn" src={lixeira}></img>
-                </LittleCard>
-            </LittleContainer>
+            
+            </SuperContainer>
         </>
     )
 }
 
+const SuperContainer = styled.div`
+background-color: red;
+`
 
 const CardContainer = styled.div`
 background-color: #FFFFFF;
@@ -181,52 +183,8 @@ button:nth-child(2){
 
 const LittleContainer = styled.div`
 display: ${({ tarefaCriada }) => tarefaCriada === true ? 'flex' : 'none'};
-background-color: #FFFFFF;
 flex-direction: column;
-justify-content: center;
-align-items: center;
 
-border-radius: 5px;
-margin-bottom: 10px;
 
 `
 
-const LittleCard = styled.div`
-display: flex;
-justify-content: space-between;
-width: 320px;
-
-
-span {
-    display: flex;
-    flex-direction: column;
-    width: 234px;
-}
-
-p{
-font-family: Lexend Deca;
-font-weight: 400;
-font-size: 19.976px;
-line-height: 25px;
-margin-bottom: 8px;
-}
-
-button {
-    border: 1px solid #D5D5D5;
-    border-radius: 5px;
-    background: #FFFFFF;
-    color: #DBDBDB;
-    font-weight: 400;
-    font-size: 19.976px;
-    line-height: 25px;
-    margin-right: 4px;
-    margin-bottom: 15px;
-}
-
-img{
-    width: 13px;
-    height: 13px;
-    display: flex;
-    margin-top: 10px;
-}
-`
