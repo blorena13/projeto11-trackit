@@ -1,20 +1,20 @@
 import styled from "styled-components";
 import correto from "./assets/correto.png"
 
-export default function CardToday({tarefa}) {
+export default function CardToday({ tarefa, done, check, setCheck }) {
     return (
         <>
             <Card data-test="today-habit-container">
-                
+
                 <div>
                     <p data-test="today-habit-name"> {tarefa.name} </p>
                     <span>
-                    <p data-test="today-habit-sequence">Sequência atual: {tarefa.currentSequence} dias</p>
-                    <p data-test="today-habit-record">Seu recorde: {tarefa.highestSequence} dias</p>
+                        <p data-test="today-habit-sequence">Sequência atual: {tarefa.currentSequence} dias</p>
+                        <p data-test="today-habit-record">Seu recorde: {tarefa.highestSequence} dias</p>
                     </span>
 
                 </div>
-                <button data-test="today-habit-check-btn"> <img src={correto}></img></button>
+                <button data-test="today-habit-check-btn" style={{backgroundColor: check === true ? '#8FC549' : '#EBEBEB'}} onClick={done}> <img src={correto}></img></button>
             </Card>
         </>
     )

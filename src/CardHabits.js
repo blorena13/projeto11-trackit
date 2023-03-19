@@ -3,98 +3,92 @@ import styled from "styled-components";
 import axios from "axios";
 import { InfoContext } from "./context/InfoContext";
 import botoes from "./botoes";
-import LittleCard from "./LittleCard";
+import { ThreeDots } from "react-loader-spinner";
 
-export default function CardHabits({ textInput, setTextInput, adicionarTarefa, MostrarCriar, setMostrarCriar, selecionado, handleButton , selected }) {
+export default function CardHabits({ textInput, setTextInput, adicionarTarefa, MostrarCriar, setMostrarCriar, selecionado, handleButton, selected, tarefaServidor }) {
 
-    const { token } = useContext(InfoContext);
-    const [novaTarefa, setNovaTarefa] = useState([]);
-    
+    const { token, disabled, setDisabled } = useContext(InfoContext);
+   
 
-    function tarefaServidor() {
-       
-        const config = {
-            headers:
-                { Authorization: `Bearer ${token}` }
-        }
 
-        const urlPost = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
-        const body = { name: textInput, days: selecionado };
-        console.log(body);
-
-        const promise = axios.post(urlPost, body, config);
-        promise.then(res => {
-            setNovaTarefa(res.data)
-        }
-
-        );
-        promise.catch(err => alert(err.response.data.mensagem));
-    }
-
-    
-    
 
     return (
         <>
-        <SuperContainer>
-            <CardContainer 
-            data-test="habit-create-container" 
-            MostrarCriar={MostrarCriar}>
-                <Card >
-                    <input data-test="habit-name-input"
-                        value={textInput}
-                        placeholder="nome do hábito"
-                        required
-                        onChange={(e) => setTextInput(e.target.value)}
-                    ></input>
-                    <div>
-                        {botoes.map((b) =>
-                            <button style={{
-                                backgroundColor: selected.includes(b.id) ? '#CFCFCF' : '#FFFFFF',
-                                color: selected.includes(b.id) ? '#FFFFFF' : '#CFCFCF'
-                            }} data-test="habit-day"
+            <SuperContainer>
+                <CardContainer
+                    data-test="habit-create-container"
+                    MostrarCriar={MostrarCriar}>
+                    <Card >
+                        <input
+                            data-test="habit-name-input"
+                            value={textInput}
+                            placeholder="nome do hábito"
+                            required
+                            onChange={(e) => setTextInput(e.target.value)}
+                            disabled={disabled}
+                        ></input>
+                        <div>
+                            {botoes.map((b) =>
+                                <button style={{
+                                    backgroundColor: selected.includes(b.id) ? '#CFCFCF' : '#FFFFFF',
+                                    color: selected.includes(b.id) ? '#FFFFFF' : '#CFCFCF'
+                                }}
+                                    data-test="habit-day"
+                                    disabled={disabled}
+                                    onClick={() => {
+                                        handleButton(b.id);
+                                        selected.includes(b.id);
+                                    }
+                                    }
+                                > {b.dia} </button>
+                            )}
+
+                        </div>
+                    </Card>
+                    <OptionCard>
+                        <div>
+                            <button
+                                data-test="habit-create-cancel-btn"
+                                
+                                onClick={() =>
+                                    setMostrarCriar(false)
+                                } >Cancelar</button>
+
+                            <button
+                                data-test="habit-create-save-btn"
                                 onClick={() => {
-                                    handleButton(b.id);
-                                    selected.includes(b.id);
+                                    tarefaServidor();
+                                    adicionarTarefa();
                                 }
-                                }
-                            > {b.dia} </button>
-                        )}
+                                }>  {disabled ? 
+                                    <ThreeDots
+                                height="30"
+                                width="40"
+                                radius="9"
+                                color="#FFFFFF"
+                                ariaLabel="three-dots-loading"
+                                wrapperStyle={{}}
+                                wrapperClassName=""
+                                visible={true}
+                            /> : "Salvar"
+                                 }  </button>
+                        </div>
+                    </OptionCard>
 
-                    </div>
-                </Card>
-                <OptionCard>
-                    <div>
-                        <button 
-                        data-test="habit-create-cancel-btn" 
-                        onClick={()=> 
-                        setMostrarCriar(false)
-                        } >Cancelar</button>
+                </CardContainer>
 
-                        <button 
-                        data-test="habit-create-save-btn" 
-                        onClick={() => {
-                            tarefaServidor()
-                            adicionarTarefa()
-                        }
-                        }>Salvar</button>
-                    </div>
-                </OptionCard>
-
-            </CardContainer>
-            
             </SuperContainer>
         </>
     )
 }
 
 const SuperContainer = styled.div`
-background-color: red;
+background-color: #E5E5E5;
 `
 
 const CardContainer = styled.div`
 background-color: #FFFFFF;
-display: ${({ MostrarCriar}) => MostrarCriar === true ? 'flex' : 'none'};
+display: ${({ MostrarCriar }) => MostrarCriar === true ? 'flex' : 'none'};
 flex-direction: column;
 align-items: center;
 
@@ -135,6 +129,7 @@ font-weight: 400;
 font-size: 19.976px;
 line-height: 25px;
 margin-top: 18px;
+outline: 0;
 }
 
 input::placeholder{
@@ -150,11 +145,15 @@ justify-content: flex-end;
 margin-bottom: 15px;
 
 div{
-    
+    display: flex;
+    justify-content: space-between;
     width: 183px;
+    margin-right: 3px;
 }
 
 button {
+    width: 84px;
+    height: 35px;
     background-color: #FFFFFF;
     border: none;
     color:#52B6FF;
@@ -163,6 +162,8 @@ button {
     font-size: 15.98px;
     line-height: 19.97px;
     border-radius: 5px;
+    
+    
 }
 
 button:nth-child(2){

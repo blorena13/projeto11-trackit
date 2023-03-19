@@ -10,12 +10,13 @@ import LittleCard from "./LittleCard";
 
 export default function Habits() {
 
-    const { image, tarefa, setTarefa, tarefaCriada, token } = useContext(InfoContext);
+    const { image, tarefaCriada, token, setDisabled, disabled } = useContext(InfoContext);
     const [textInput, setTextInput] = useState("");
     const [habitos, setHabitos] =  useState([]);
     const [mostrarCriar, setMostrarCriar] = useState(false);
     const [selected, setSelected] = useState([]);
     const selecionado = (selected);
+    const [novaTarefa, setNovaTarefa] = useState([]);
 
     const handleButton = (selecionado) => {
         if (selected.includes(selecionado)) {
@@ -28,8 +29,8 @@ export default function Habits() {
 
 
     function adicionarTarefa(){
-        const novaTarefaArray = [...tarefa, textInput];
-        setTarefa(novaTarefaArray);
+        const novaTarefaArray = [...habitos, textInput];
+        setHabitos(novaTarefaArray);
         setTextInput("");
         setMostrarCriar(false);
     }
@@ -43,10 +44,51 @@ export default function Habits() {
         }
 
         const promise = axios.get(url, config)
-        promise.then(res => setHabitos(res.data))
+        promise.then(res => 
+            {
+                setHabitos(res.data)
+                console.log(res.data)
+            })
         promise.catch(err => alert(err.response.data.mensagem))
 
     }, [])
+
+    function tarefaServidor() {
+
+        const urlPost = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
+
+        const config = {
+            headers:
+                { Authorization: `Bearer ${token}` }
+        }
+
+        const body = { name: textInput, days: selecionado };
+
+        const promise = axios.post(urlPost, body, config);
+        promise.then(res => {
+            setHabitos(res.data);
+            console.log(novaTarefa)
+            setDisabled(true);
+        }
+
+        );
+        promise.catch(err => {
+            alert(err.response.data.mensagem);
+            setDisabled(false);
+        });
+    }
+
+  function deletePost(){
+
+    const urlDelete = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${habitos.id}`;
+    
+    const config = {
+        headers:
+            { Authorization: `Bearer ${token}` }
+    }
+
+      axios.delete(urlDelete, config);
+   }
 
     console.log(habitos)
 
@@ -61,7 +103,8 @@ export default function Habits() {
 
                 <ButtonHabits>
                     <p>Meus hábitos</p>
-                    <button  data-test="habit-create-btn" 
+                    <button  
+                    data-test="habit-create-btn" 
                     onClick={()=> 
                     setMostrarCriar(true)} 
                     >+</button>
@@ -76,11 +119,18 @@ export default function Habits() {
                     setMostrarCriar={setMostrarCriar} 
                     adicionarTarefa={adicionarTarefa} 
                     textInput={textInput} 
-                    setTextInput={setTextInput} />
+                    setTextInput={setTextInput}
+                    tarefaServidor={tarefaServidor}
+                    />
 
                     {habitos.map((task) =>
                     <LittleCard 
-                    name={task.name}  />
+                    name={task.name}
+                    task={task.days}
+                    deletepost={deletePost()}
+                    
+
+                      />
                     )}
                     
                     <p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>

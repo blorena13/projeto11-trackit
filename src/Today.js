@@ -11,6 +11,9 @@ export default function Today() {
 
     const [tarefaGet, setTarefaGet] = useState([]);
     const { image, token } = useContext(InfoContext);
+    const [Arraycheck, setArrayCheck] = useState([]);
+    const [ check, setCheck] = useState(false);
+    console.log(tarefaGet)
 
     useEffect(() => {
 
@@ -23,11 +26,37 @@ export default function Today() {
         const promise = axios.get(url, config);
         promise.then((res) => {
             setTarefaGet(res.data);
-            console.log(tarefaGet)
+            
         })
-    })
+        promise.catch(err => console(err.response.data.mensagem));
+    }, []);
+    
 
-   
+    function tarefaFeita() {
+        const urlCheck = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${tarefaGet[0].id}/check`;
+
+        const data = {done: true}
+
+        const config = {
+            headers:
+                { Authorization: `Bearer ${token}` }
+        }
+
+        const promisePost = axios.post(urlCheck, data, config);
+        promisePost.then(res => {
+            setArrayCheck(res.data);
+            setCheck(true);
+            console.log(res.data);
+        })
+        promisePost.catch(err => {
+            
+            console.log(err.response.data);
+        })
+    }
+
+    // const idDaTarefa = (tarefaGet[0].id);
+    // tarefaFeita(idDaTarefa);
+
 
     return (
         <>
@@ -45,10 +74,13 @@ export default function Today() {
                 <FeedToday>
                     {
                         tarefaGet.map((t) =>
-                        <CardToday tarefa={t} />
+                            <CardToday 
+                            tarefa={t} 
+                            done={tarefaFeita()}
+                            />
                         )
                     }
-                    
+
                 </FeedToday>
 
                 <Footer data-test="menu">
@@ -56,7 +88,9 @@ export default function Today() {
 
                     <div >
                         <Link data-test="today-link" to={`/hoje`}>
-                            <CircularProgressbar text="Hoje"
+                            <CircularProgressbar
+                                value={30}
+                                text="Hoje"
                                 background
                                 backgroundPadding={6}
                                 styles={buildStyles({

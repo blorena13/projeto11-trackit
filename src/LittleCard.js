@@ -2,24 +2,37 @@ import lixeira from "./assets/lixeira.png";
 import styled from "styled-components";
 import botoes from "./botoes";
 
-export default function LittleCard({name}){
-    return(
+export default function LittleCard({ name, task, deletepost }) {
+
+
+    return (
         <>
-        <ContainerLittle>
-         <LittleCards data-test="habit-container">
+            <ContainerLittle>
+                <LittleCards data-test="habit-container">
                     <span>
                         <p data-test="habit-name">{name}</p>
                         <div>
                             {
-                                botoes.map((b) =>
-                                    <button>{b.dia}</button>
+                                botoes.map((b) => {
+                                    const isTaskInclude = task && Array.isArray(task) && task.includes(b.id);
+
+                                    return (
+                                        <button style={{
+                                            backgroundColor: isTaskInclude ? '#CFCFCF' : '#FFFFFF',
+                                            color: isTaskInclude ? '#FFFFFF' : '#CFCFCF'
+                                        }}
+                                        >{b.dia}</button>
+
+                                    )
+                                }
+
                                 )}
 
                         </div>
                     </span>
-                    <img data-test="habit-delete-btn" src={lixeira}></img>
+                    <img data-test="habit-delete-btn" onClick={() => deletepost} src={lixeira}></img>
                 </LittleCards>
-                </ContainerLittle>
+            </ContainerLittle>
         </>
     )
 }
@@ -30,12 +43,11 @@ display: flex;
 justify-content: space-between;
 width: 320px;
 
-
-
 span {
     display: flex;
     flex-direction: column;
-    width: 234px;
+    justify-content: space-between;
+    width: 249px;
 }
 
 p{

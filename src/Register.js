@@ -22,7 +22,11 @@ export default function Register() {
         console.log(body);
 
         const promise = axios.post(urlPost, body)
-        promise.then(res => navigate("/"));
+        promise.then(res => {
+            setDisabled(false)
+            navigate("/")
+        });
+            
         promise.catch(
             err => {
                 alert(err.response.data.mensagem);
@@ -76,7 +80,7 @@ export default function Register() {
 
                         <button 
                         data-test="signup-btn" 
-                        type="submit" 
+                        type="submit"
                         onClick={() => setDisabled(true)}> {disabled ? 
                              <ThreeDots
                                 height="40"

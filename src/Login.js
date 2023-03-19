@@ -21,11 +21,10 @@ export default function Login() {
 
         const promise = axios.post(urlPost, body)
         promise.then(res => {
-            setImage(res.data.image);
             setToken(res.data.token);
-            setDisabled(true);
+            setImage(res.data.image);
+            setDisabled(false);
             navigate("/hoje");
-
         });
         promise.catch(err => {
             alert(err.response.data.mensagem);
@@ -34,8 +33,6 @@ export default function Login() {
     }
 
     console.log(disabled)
-
-
 
     return (
         <>
@@ -64,7 +61,8 @@ export default function Login() {
                         <button 
                         data-test="login-btn" 
                         type="submit" 
-                        onClick={() => setDisabled(true)}>
+                        onClick={() => setDisabled(true)}
+                        >
                             {disabled ? 
                             <ThreeDots
                                 height="40"
