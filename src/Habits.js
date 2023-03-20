@@ -74,6 +74,7 @@ export default function Habits() {
         promise.then(res => 
             {
                 setHabitos(res.data)
+                setDisabled(false);
                 console.log(res.data)
             })
         promise.catch(err => alert(err.response.data.mensagem))
