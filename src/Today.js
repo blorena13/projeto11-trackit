@@ -100,7 +100,7 @@ export default function Today() {
 
                 <TodayHabits>
                     <div data-test="today">{diadasemana}, {dia + "/" + mes}</div>
-                    <span data-test="today-counter">{porcentagem}% de hábitos concluídos</span>
+                    <span data-test="today-counter" style={{color: check ? '#8FC549' : '#BABABA'}}> {porcentagem}% de hábitos concluídos</span>
                 </TodayHabits>
 
                 <FeedToday>

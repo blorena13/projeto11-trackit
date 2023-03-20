@@ -6,6 +6,14 @@ export default function CardToday({ tarefa, done, notDone, check}) {
 
     const [isChecked, setIsChecked] = useState(check);
 
+    // function comparar(){
+    //     if (tarefa.currentSequence === tarefa.highestSequence) {
+    //        return true
+    //     } else {
+    //        return false
+    //     }
+    // }
+
     return (
         <>
             <Card data-test="today-habit-container">
@@ -13,8 +21,8 @@ export default function CardToday({ tarefa, done, notDone, check}) {
                 <div>
                     <p data-test="today-habit-name"> {tarefa.name} </p>
                     <span>
-                        <p data-test="today-habit-sequence">Sequência atual: {tarefa.currentSequence} dias</p>
-                        <p data-test="today-habit-record">Seu recorde: {tarefa.highestSequence} dias</p>
+                        <p data-test="today-habit-sequence" >Sequência atual: <span style={{color: isChecked ? '#8FC549' : '#666666' }}>{tarefa.currentSequence} dias</span>  </p>
+                        <p data-test="today-habit-record">Seu recorde: <span style={{color: isChecked ? '#8FC549' : '#666666' }} >{tarefa.highestSequence} dias</span></p>
                     </span>
 
                 </div>
@@ -48,6 +56,7 @@ margin-bottom: 10px;
 
 div{
     display: flex;
+    width: 250px;
     flex-direction: column;
     color:#666666;
 }
