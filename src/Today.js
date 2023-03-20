@@ -11,10 +11,9 @@ import botoes from "./botoes";
 export default function Today() {
 
     const [tarefaGet, setTarefaGet] = useState([]);
-    const { image, token } = useContext(InfoContext);
-    const [Arraycheck, setArrayCheck] = useState([]);
+    const { image, token, porcentagem, setPorcentagem } = useContext(InfoContext);
+    const [arrayCheck, setArrayCheck] = useState([]);
     const [check, setCheck] = useState(false);
-    const [porcentagem, setPorcentagem] = useState(0);
     let dataAtual = new Date();
     let dia = dataAtual.getDate();
     let mes = (dataAtual.getMonth() + 1);
@@ -22,10 +21,10 @@ export default function Today() {
     const [mudarCor, setmudarCor] = useState(false);
 
     useEffect(() => { 
-        const completedhabits = tarefaGet.filter(t => Arraycheck.includes(t.id));
+        const completedhabits = tarefaGet.filter(t => arrayCheck.includes(t.id));
         const porcentagem = Math.round((completedhabits.length / tarefaGet.length) * 100);
         setPorcentagem(porcentagem);
-    },[Arraycheck, tarefaGet]);
+    },[arrayCheck, tarefaGet]);
 
     useEffect(() => {
 
@@ -68,7 +67,6 @@ export default function Today() {
     function desmarcarFeito(tarefaid) {
         const urlpost = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${tarefaid}/uncheck`;
 
-    
 
         const config = {
             headers:
@@ -79,6 +77,7 @@ export default function Today() {
         promisePost.then(res => {
             setArrayCheck(prevArrayCheck => prevArrayCheck.filter(id => id !== tarefaid));
             setCheck(false);
+            console.log(res.data);
 
         })
         promisePost.catch(err => {
@@ -86,6 +85,7 @@ export default function Today() {
         })
     }
 
+   console.log(arrayCheck) 
 
 
 
@@ -110,9 +110,11 @@ export default function Today() {
                         tarefaGet.map((t) =>
                             <CardToday
                                 tarefa={t}
+                                id={t.id}
                                 done={() => tarefaFeita(t.id)}
                                 notDone={() => desmarcarFeito(t.id)}
-                                check={Arraycheck.includes(t.id)}
+                                check={arrayCheck.includes(t.id)}
+                                
                             />
                         )
                     }

@@ -54,10 +54,13 @@ console.log(disabled)
                                 onClick={() =>{
                                     setMostrarCriar(false);
                                     setDisabled(false);
-                                }} >Cancelar</button>
+                                }} 
+                                disabled={disabled}
+                                >Cancelar</button>
 
                             <button
                                 data-test="habit-create-save-btn"
+                                disabled={disabled}
                                 onClick={(e) => {
                                     e.persist();
                                     setDisabled(true);

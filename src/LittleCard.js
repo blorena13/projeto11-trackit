@@ -66,6 +66,11 @@ line-height: 25px;
 margin-bottom: 8px;
 }
 
+p::first-letter{
+    text-transform: uppercase;
+}
+
+
 button {
     border: 1px solid #D5D5D5;
     border-radius: 5px;

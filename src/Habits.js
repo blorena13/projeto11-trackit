@@ -10,9 +10,9 @@ import LittleCard from "./LittleCard";
 
 export default function Habits() {
 
-    const { image, tarefaCriada, token, setDisabled, disabled } = useContext(InfoContext);
+    const { image, tarefaCriada, token, setDisabled, disabled, porcentagem } = useContext(InfoContext);
     const [textInput, setTextInput] = useState("");
-    const [habitos, setHabitos] =  useState([]);
+    const [habitos, setHabitos] = useState([]);
     const [mostrarCriar, setMostrarCriar] = useState(false);
     const [selected, setSelected] = useState([]);
     const selecionado = (selected);
@@ -27,10 +27,10 @@ export default function Habits() {
         }
     }
 
-    
 
 
-    function adicionarTarefa(){
+
+    function adicionarTarefa() {
         const novaTarefaArray = [...habitos, textInput];
         setHabitos(novaTarefaArray);
         setTextInput("");
@@ -71,31 +71,30 @@ export default function Habits() {
         }
 
         const promise = axios.get(url, config)
-        promise.then(res => 
-            {
-                setHabitos(res.data)
-                setDisabled(false);
-                console.log(res.data)
-            })
+        promise.then(res => {
+            setHabitos(res.data)
+            setDisabled(false);
+            console.log(res.data)
+        })
         promise.catch(err => alert(err.response.data.mensagem))
 
     }, [habitos])
 
-  function deletePost(id){
-    const urlDelete = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`;
-    const config = {
-        headers:
-            { Authorization: `Bearer ${token}` }
-    }
+    function deletePost(id) {
+        const urlDelete = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`;
+        const config = {
+            headers:
+                { Authorization: `Bearer ${token}` }
+        }
 
-     const promise = axios.delete(urlDelete, config);
-     promise.then(res => {
-        const novaListaDeHabitos = habitos.filter(habito => habito.id !== id);
-        setHabitos(novaListaDeHabitos);
-        
-     })
-     promise.catch(err => console.log(err.response.data.mensagem));
-   }
+        const promise = axios.delete(urlDelete, config);
+        promise.then(res => {
+            const novaListaDeHabitos = habitos.filter(habito => habito.id !== id);
+            setHabitos(novaListaDeHabitos);
+
+        })
+        promise.catch(err => console.log(err.response.data.mensagem));
+    }
 
 
     console.log(habitos)
@@ -111,38 +110,38 @@ export default function Habits() {
 
                 <ButtonHabits>
                     <p>Meus hábitos</p>
-                    <button  
-                    data-test="habit-create-btn" 
-                    onClick={()=> 
-                    setMostrarCriar(true)} 
+                    <button
+                        data-test="habit-create-btn"
+                        onClick={() =>
+                            setMostrarCriar(true)}
                     >+</button>
                 </ButtonHabits>
 
                 <FeedHabits>
-                    <CardHabits 
-                    handleButton={handleButton} 
-                    selected={selected} 
-                    selecionado={selecionado} 
-                    MostrarCriar={mostrarCriar} 
-                    setMostrarCriar={setMostrarCriar} 
-                    adicionarTarefa={adicionarTarefa} 
-                    textInput={textInput} 
-                    setTextInput={setTextInput}
-                    tarefaServidor={tarefaServidor}
+                    <CardHabits
+                        handleButton={handleButton}
+                        selected={selected}
+                        selecionado={selecionado}
+                        MostrarCriar={mostrarCriar}
+                        setMostrarCriar={setMostrarCriar}
+                        adicionarTarefa={adicionarTarefa}
+                        textInput={textInput}
+                        setTextInput={setTextInput}
+                        tarefaServidor={tarefaServidor}
                     />
 
                     {habitos.map((task) =>
-                    <LittleCard 
-                    key={task.id}
-                    id={task.id}
-                    name={task.name}
-                    task={task.days}
-                    deletepost={deletePost}
-                    
+                        <LittleCard
+                            key={task.id}
+                            id={task.id}
+                            name={task.name}
+                            task={task.days}
+                            deletepost={deletePost}
 
-                      />
+
+                        />
                     )}
-                    
+
                     <p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>
                 </FeedHabits>
 
@@ -152,22 +151,24 @@ export default function Habits() {
                     </Link>
 
                     <div >
-                        <Link  data-test="today-link" to={`/hoje`}>
-                        <CircularProgressbar text="Hoje"
-                            background
-                            backgroundPadding={6}
-                            styles={buildStyles({
-                                backgroundColor: "#3e98c7",
-                                textColor: "#fff",
-                                pathColor: "#fff",
-                                trailColor: "transparent",
-                            })}
-                        />
+                        <Link data-test="today-link" to={`/hoje`}>
+                            <CircularProgressbar
+                                value={porcentagem}
+                                text="Hoje"
+                                background
+                                backgroundPadding={6}
+                                styles={buildStyles({
+                                    backgroundColor: "#3e98c7",
+                                    textColor: "#fff",
+                                    pathColor: "#fff",
+                                    trailColor: "transparent",
+                                })}
+                            />
                         </Link>
                     </div>
 
                     <Link data-test="history-link" to={`/historico`}>
-                    <button>Histórico</button>
+                        <button>Histórico</button>
                     </Link>
                 </Footer>
 

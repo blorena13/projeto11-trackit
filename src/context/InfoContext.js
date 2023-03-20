@@ -10,10 +10,11 @@ export const InfoProvider = ({ children }) => {
     const [password, setPassword] = useState("");
     const [token, setToken] = useState("");
     const [disabled, setDisabled] = useState(false);
+    const [porcentagem, setPorcentagem] = useState(0);
 
 
     return (
-        <InfoContext.Provider value={{ email, setEmail, image, setImage, password, setPassword,  token, setToken, disabled, setDisabled}}>
+        <InfoContext.Provider value={{ email, setEmail, image, setImage, password, setPassword,  token, setToken, disabled, setDisabled, porcentagem, setPorcentagem}}>
             {children}
         </InfoContext.Provider>
     )
