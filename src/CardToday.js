@@ -2,17 +2,21 @@ import { useState } from "react";
 import styled from "styled-components";
 import correto from "./assets/correto.png"
 
-export default function CardToday({ tarefa, done, notDone, check }) {
+export default function CardToday({ tarefa, done, notDone, feitos, id}) {
 
-    const [isChecked, setIsChecked] = useState(check);
+    const [isChecked, setIsChecked] = useState(feitos);
+    const [igual, setIgual] = useState(false);
+    const hoje = tarefa.currentSequence;
+    const record = tarefa.highestSequence;
+ 
+    function comparar(){
+       if (hoje === record) {
+         setIgual(true)
+      } else {
+           setIgual(false) 
+       }
+    }
 
-    // function comparar(){
-    //     if (tarefa.currentSequence === tarefa.highestSequence) {
-    //        return true
-    //     } else {
-    //        return false
-    //     }
-    // }
 
 
     return (
@@ -23,7 +27,7 @@ export default function CardToday({ tarefa, done, notDone, check }) {
                     <p data-test="today-habit-name"> {tarefa.name} </p>
                     <span>
                         <p data-test="today-habit-sequence" >Sequência atual: <span style={{ color: isChecked ? '#8FC549' : '#666666' }}>{tarefa.currentSequence} dias</span>  </p>
-                        <p data-test="today-habit-record">Seu recorde: <span style={{ color: isChecked ? '#8FC549' : '#666666' }} >{tarefa.highestSequence} dias</span></p>
+                        <p data-test="today-habit-record">Seu recorde: <span style={{ color: igual === true ? '#8FC549' : '#666666' }} >{tarefa.highestSequence} dias</span></p>
                     </span>
 
                 </div>
@@ -32,11 +36,13 @@ export default function CardToday({ tarefa, done, notDone, check }) {
                         backgroundColor: isChecked ? '#8FC549' : '#EBEBEB'
                     }}
                     onClick={() => {
+                        comparar();
                         setIsChecked(!isChecked);
                         if (isChecked) {
-                            notDone();
+                            notDone(id);
+                            setIgual(false);
                         } else {
-                            done();
+                            done(id);
                         }
 
                     }

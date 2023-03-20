@@ -18,13 +18,13 @@ export default function Today() {
     let dia = dataAtual.getDate();
     let mes = (dataAtual.getMonth() + 1);
     const diadasemana = botoes.find(b => b.id === dataAtual.getDay()).semana;
-    const [mudarCor, setmudarCor] = useState(false);
 
-    useEffect(() => { 
+    useEffect(() => {
+
         const completedhabits = tarefaGet.filter(t => arrayCheck.includes(t.id));
         const porcentagem = Math.round((completedhabits.length / tarefaGet.length) * 100);
         setPorcentagem(porcentagem);
-    },[arrayCheck, tarefaGet]);
+    }, [tarefaGet, arrayCheck]);
 
     useEffect(() => {
 
@@ -44,19 +44,20 @@ export default function Today() {
 
 
     function tarefaFeita(id) {
-        const urlCheck = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`;
 
+        const urlCheck = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`;
+        const body = {};
         const config = {
             headers:
                 { Authorization: `Bearer ${token}` }
         }
 
-        const promisePost = axios.post(urlCheck, {}, config);
+        const promisePost = axios.post(urlCheck, body, config);
         promisePost.then(res => {
             setArrayCheck(prevArrayCheck => [...prevArrayCheck, id]);
             setCheck(true);
             console.log(res.data);
-           
+
         })
         promisePost.catch(err => {
 
@@ -65,15 +66,16 @@ export default function Today() {
     }
 
     function desmarcarFeito(tarefaid) {
-        const urlpost = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${tarefaid}/uncheck`;
 
+        const urlpost = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${tarefaid}/uncheck`;
+        const body = {};
 
         const config = {
             headers:
                 { Authorization: `Bearer ${token}` }
         }
 
-        const promisePost = axios.post(urlpost, {}, config);
+        const promisePost = axios.post(urlpost, body, config);
         promisePost.then(res => {
             setArrayCheck(prevArrayCheck => prevArrayCheck.filter(id => id !== tarefaid));
             setCheck(false);
@@ -85,8 +87,8 @@ export default function Today() {
         })
     }
 
-   console.log(arrayCheck) 
 
+    
 
 
     return (
@@ -99,22 +101,24 @@ export default function Today() {
 
                 <TodayHabits>
                     <div data-test="today">{diadasemana}, {dia + "/" + mes}</div>
-                    <span data-test="today-counter" > 
-                    { check ? <span style={{color: check ? '#8FC549' : '#BABABA'}}>
-                        {porcentagem}% de hábitos concluídos </span> :
-                         <span>Nenhum hábito concluído ainda</span> } </span>
+                    <span data-test="today-counter" >
+                        {check ? <span style={{ color: check ? '#8FC549' : '#BABABA' }}>
+                            {porcentagem}% de hábitos concluídos </span> :
+                            <span>Nenhum hábito concluído ainda</span>} </span>
                 </TodayHabits>
 
                 <FeedToday>
                     {
                         tarefaGet.map((t) =>
+
                             <CardToday
+
                                 tarefa={t}
                                 id={t.id}
                                 done={() => tarefaFeita(t.id)}
                                 notDone={() => desmarcarFeito(t.id)}
-                                check={arrayCheck.includes(t.id)}
-                                
+                                feitos={arrayCheck.includes(t.id)}
+
                             />
                         )
                     }
