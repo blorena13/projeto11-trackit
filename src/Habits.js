@@ -96,6 +96,7 @@ export default function Habits() {
      promise.catch(err => console.log(err.response.data.mensagem));
    }
 
+
     console.log(habitos)
 
     return (

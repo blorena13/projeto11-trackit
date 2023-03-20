@@ -8,16 +8,18 @@ import { ThreeDots } from "react-loader-spinner";
 export default function CardHabits({ textInput, setTextInput, adicionarTarefa, MostrarCriar, setMostrarCriar, selecionado, handleButton, selected, tarefaServidor }) {
 
     const { token, disabled, setDisabled } = useContext(InfoContext);
-   
 
 
+console.log(disabled)
 
     return (
         <>
             <SuperContainer>
                 <CardContainer
                     data-test="habit-create-container"
-                    MostrarCriar={MostrarCriar}>
+                    MostrarCriar={MostrarCriar}
+                    disabled={disabled}
+                    >
                     <Card >
                         <input
                             data-test="habit-name-input"
@@ -34,11 +36,11 @@ export default function CardHabits({ textInput, setTextInput, adicionarTarefa, M
                                     color: selected.includes(b.id) ? '#FFFFFF' : '#CFCFCF'
                                 }}
                                     data-test="habit-day"
-                                    disabled={disabled}
                                     onClick={() => {
                                         handleButton(b.id);
                                     }
                                     }
+                                    disabled={disabled}
                                 > {b.dia} </button>
                             )}
 
@@ -48,26 +50,31 @@ export default function CardHabits({ textInput, setTextInput, adicionarTarefa, M
                         <div>
                             <button
                                 data-test="habit-create-cancel-btn"
-                                
-                                onClick={() =>
-                                    setMostrarCriar(false)
-                                } >Cancelar</button>
+
+                                onClick={() =>{
+                                    setMostrarCriar(false);
+                                    setDisabled(false);
+                                }} >Cancelar</button>
 
                             <button
                                 data-test="habit-create-save-btn"
-                                onClick={() => tarefaServidor()}>  
-                                {disabled ? 
+                                onClick={(e) => {
+                                    e.persist();
+                                    setDisabled(true);
+                                    tarefaServidor();
+                                }}>
+                                {disabled ?
                                     <ThreeDots
-                                height="30"
-                                width="40"
-                                radius="9"
-                                color="#FFFFFF"
-                                ariaLabel="three-dots-loading"
-                                wrapperStyle={{}}
-                                wrapperClassName=""
-                                visible={true}
-                            /> : "Salvar"
-                                 }  </button>
+                                        height="30"
+                                        width="50"
+                                        radius="9"
+                                        color="#FFFFFF"
+                                        ariaLabel="three-dots-loading"
+                                        wrapperStyle={{}}
+                                        wrapperClassName=""
+                                        visible={true}
+                                    /> : "Salvar"
+                                }  </button>
                         </div>
                     </OptionCard>
 
@@ -126,6 +133,7 @@ font-size: 19.976px;
 line-height: 25px;
 margin-top: 18px;
 outline: 0;
+color: ${({disabled}) => disabled === true ? '#B3B3B3' : '#666666'};
 }
 
 input::placeholder{
@@ -158,8 +166,9 @@ button {
     font-size: 15.98px;
     line-height: 19.97px;
     border-radius: 5px;
-    
-    
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 button:nth-child(2){
@@ -169,10 +178,4 @@ button:nth-child(2){
 }
 `
 
-const LittleContainer = styled.div`
-display: ${({ tarefaCriada }) => tarefaCriada === true ? 'flex' : 'none'};
-flex-direction: column;
-
-
-`
 

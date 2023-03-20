@@ -23,12 +23,12 @@ export default function Login() {
         promise.then(res => {
             setToken(res.data.token);
             setImage(res.data.image);
-            setDisabled(false);
+            setDisabled(true);
             navigate("/hoje");
         });
         promise.catch(err => {
-            alert(err.response.data.mensagem);
             setDisabled(false);
+            alert(err.response.data.mensagem);
             });
     }
 
@@ -61,7 +61,13 @@ export default function Login() {
                         <button 
                         data-test="login-btn" 
                         type="submit" 
-                        onClick={() => setDisabled(true)}
+                        onClick={(e) => {
+                            e.persist();
+                            setDisabled(true);
+                            login(e);
+
+                        }}
+                        disabled={disabled}
                         >
                             {disabled ? 
                             <ThreeDots
@@ -118,6 +124,7 @@ input{
     font-weight: 400;
     font-size: 19.98px;
     line-height: 25px;
+    color: #666666;
     outline: 0;
 }
 

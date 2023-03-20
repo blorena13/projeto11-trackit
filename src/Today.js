@@ -19,6 +19,7 @@ export default function Today() {
     let dia = dataAtual.getDate();
     let mes = (dataAtual.getMonth() + 1);
     const diadasemana = botoes.find(b => b.id === dataAtual.getDay()).semana;
+    const [mudarCor, setmudarCor] = useState(false);
 
     useEffect(() => { 
         const completedhabits = tarefaGet.filter(t => Arraycheck.includes(t.id));
@@ -46,16 +47,12 @@ export default function Today() {
     function tarefaFeita(id) {
         const urlCheck = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`;
 
-
-
-        const data = { done: true }
-
         const config = {
             headers:
                 { Authorization: `Bearer ${token}` }
         }
 
-        const promisePost = axios.post(urlCheck, data, config);
+        const promisePost = axios.post(urlCheck, {}, config);
         promisePost.then(res => {
             setArrayCheck(prevArrayCheck => [...prevArrayCheck, id]);
             setCheck(true);
@@ -71,14 +68,14 @@ export default function Today() {
     function desmarcarFeito(tarefaid) {
         const urlpost = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${tarefaid}/uncheck`;
 
-        const data = { done: false }
+    
 
         const config = {
             headers:
                 { Authorization: `Bearer ${token}` }
         }
 
-        const promisePost = axios.post(urlpost, data, config);
+        const promisePost = axios.post(urlpost, {}, config);
         promisePost.then(res => {
             setArrayCheck(prevArrayCheck => prevArrayCheck.filter(id => id !== tarefaid));
             setCheck(false);
@@ -88,6 +85,8 @@ export default function Today() {
             console.log(err.response.data);
         })
     }
+
+
 
 
     return (
@@ -100,7 +99,10 @@ export default function Today() {
 
                 <TodayHabits>
                     <div data-test="today">{diadasemana}, {dia + "/" + mes}</div>
-                    <span data-test="today-counter" style={{color: check ? '#8FC549' : '#BABABA'}}> {porcentagem}% de hábitos concluídos</span>
+                    <span data-test="today-counter" > 
+                    { check ? <span style={{color: check ? '#8FC549' : '#BABABA'}}>
+                        {porcentagem}% de hábitos concluídos </span> :
+                         <span>Nenhum hábito concluído ainda</span> } </span>
                 </TodayHabits>
 
                 <FeedToday>

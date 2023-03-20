@@ -4,6 +4,14 @@ import botoes from "./botoes";
 
 export default function LittleCard({ name, task, deletepost, id }) {
 
+    function askDelete(){
+        if (window.confirm("Deseja apagar este hábito?")){
+            deletepost(id);
+        } else {
+
+        }
+    }
+
 
     return (
         <>
@@ -17,7 +25,7 @@ export default function LittleCard({ name, task, deletepost, id }) {
                                     const isTaskInclude = task && Array.isArray(task) && task.includes(b.id);
 
                                     return (
-                                        <button style={{
+                                        <button  data-test="habit-day" style={{
                                             backgroundColor: isTaskInclude ? '#CFCFCF' : '#FFFFFF',
                                             color: isTaskInclude ? '#FFFFFF' : '#CFCFCF'
                                         }}
@@ -30,7 +38,7 @@ export default function LittleCard({ name, task, deletepost, id }) {
 
                         </div>
                     </span>
-                    <img data-test="habit-delete-btn" src={lixeira} onClick={() => deletepost(id)} ></img>
+                    <img data-test="habit-delete-btn" src={lixeira} onClick={() => askDelete()} ></img>
                 </LittleCards>
             </ContainerLittle>
         </>

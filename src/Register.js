@@ -26,11 +26,12 @@ export default function Register() {
             setDisabled(false)
             navigate("/")
         });
-            
+
         promise.catch(
             err => {
-                alert(err.response.data.mensagem);
                 setDisabled(false);
+                alert(err.response.data.mensagem);
+
             });
 
     }
@@ -78,11 +79,17 @@ export default function Register() {
                         ></input>
 
 
-                        <button 
-                        data-test="signup-btn" 
-                        type="submit"
-                        onClick={() => setDisabled(true)}> {disabled ? 
-                             <ThreeDots
+                        <button
+                            data-test="signup-btn"
+                            type="submit"
+                            onClick={(e) => {
+                                e.persist();
+                                setDisabled(true);
+                                cadastrar(e);
+                            }}
+                            disabled={disabled}
+                        > {disabled ?
+                            <ThreeDots
                                 height="40"
                                 width="50"
                                 radius="9"
@@ -91,9 +98,9 @@ export default function Register() {
                                 wrapperStyle={{}}
                                 wrapperClassName=""
                                 visible={true}
-                            />  : <span>Cadastrar</span>
-                        
-                        }
+                            /> : <span>Cadastrar</span>
+
+                            }
 
                         </button>
                     </form>
@@ -139,6 +146,7 @@ input{
     font-size: 19.98px;
     line-height: 25px;
     outline: 0;
+    color: #666666;
 }
 
 input::placeholder{
@@ -157,7 +165,7 @@ button {
     font-size: 20.98px;
     line-height: 26.22px;
     margin-bottom: 25px;
-    opacity: ${({disabled}) => disabled === true ? 0.7 : 'none'};
+    opacity: ${({ disabled }) => disabled === true ? 0.7 : 'none'};
 }
 
 p{
