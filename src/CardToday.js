@@ -5,7 +5,7 @@ import correto from "./assets/correto.png"
 export default function CardToday({ tarefa, done, notDone, check}) {
 
     const [isChecked, setIsChecked] = useState(check);
-    console.log(isChecked)
+
     return (
         <>
             <Card data-test="today-habit-container">

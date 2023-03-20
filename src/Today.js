@@ -6,15 +6,25 @@ import { useState, useContext, useEffect } from "react";
 import { InfoContext } from "./context/InfoContext";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import botoes from "./botoes";
 
 export default function Today() {
 
     const [tarefaGet, setTarefaGet] = useState([]);
     const { image, token } = useContext(InfoContext);
     const [Arraycheck, setArrayCheck] = useState([]);
-    const [ check, setCheck] = useState(false);
-    const [contagem, setContagem] = useState(0);
+    const [check, setCheck] = useState(false);
+    const [porcentagem, setPorcentagem] = useState(0);
+    let dataAtual = new Date();
+    let dia = dataAtual.getDate();
+    let mes = (dataAtual.getMonth() + 1);
+    const diadasemana = botoes.find(b => b.id === dataAtual.getDay()).semana;
 
+    useEffect(() => { 
+        const completedhabits = tarefaGet.filter(t => Arraycheck.includes(t.id));
+        const porcentagem = Math.round((completedhabits.length / tarefaGet.length) * 100);
+        setPorcentagem(porcentagem);
+    },[Arraycheck, tarefaGet]);
 
     useEffect(() => {
 
@@ -27,16 +37,18 @@ export default function Today() {
         const promise = axios.get(url, config);
         promise.then((res) => {
             setTarefaGet(res.data);
-            
+
         })
         promise.catch(err => console(err.response.data.mensagem));
     }, []);
-    
+
 
     function tarefaFeita(id) {
         const urlCheck = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`;
 
-        const data = {done: true}
+
+
+        const data = { done: true }
 
         const config = {
             headers:
@@ -45,20 +57,21 @@ export default function Today() {
 
         const promisePost = axios.post(urlCheck, data, config);
         promisePost.then(res => {
-            setArrayCheck(res.data);
+            setArrayCheck(prevArrayCheck => [...prevArrayCheck, id]);
             setCheck(true);
             console.log(res.data);
+           
         })
         promisePost.catch(err => {
-            
+
             console.log(err.response.data);
         })
     }
 
-    function desmarcarFeito(tarefaid){
+    function desmarcarFeito(tarefaid) {
         const urlpost = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${tarefaid}/uncheck`;
 
-        const data = {done: false}
+        const data = { done: false }
 
         const config = {
             headers:
@@ -66,8 +79,8 @@ export default function Today() {
         }
 
         const promisePost = axios.post(urlpost, data, config);
-        promisePost.then(res=> {
-            setArrayCheck(res.data);
+        promisePost.then(res => {
+            setArrayCheck(prevArrayCheck => prevArrayCheck.filter(id => id !== tarefaid));
             setCheck(false);
 
         })
@@ -86,18 +99,18 @@ export default function Today() {
                 </NavBar>
 
                 <TodayHabits>
-                    <div data-test="today">Segunda, 17/05</div>
-                    <span data-test="today-counter">Nenhum hábito concluído ainda</span>
+                    <div data-test="today">{diadasemana}, {dia + "/" + mes}</div>
+                    <span data-test="today-counter">{porcentagem}% de hábitos concluídos</span>
                 </TodayHabits>
 
                 <FeedToday>
                     {
                         tarefaGet.map((t) =>
-                            <CardToday 
-                            tarefa={t} 
-                            done={() => tarefaFeita(t.id)}
-                            notDone={()=> desmarcarFeito(t.id)}
-                            check={Arraycheck.includes(t.id)}
+                            <CardToday
+                                tarefa={t}
+                                done={() => tarefaFeita(t.id)}
+                                notDone={() => desmarcarFeito(t.id)}
+                                check={Arraycheck.includes(t.id)}
                             />
                         )
                     }
@@ -110,7 +123,7 @@ export default function Today() {
                     <div >
                         <Link data-test="today-link" to={`/hoje`}>
                             <CircularProgressbar
-                                value={30}
+                                value={porcentagem}
                                 text="Hoje"
                                 background
                                 backgroundPadding={6}
