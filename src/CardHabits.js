@@ -55,11 +55,8 @@ export default function CardHabits({ textInput, setTextInput, adicionarTarefa, M
 
                             <button
                                 data-test="habit-create-save-btn"
-                                onClick={() => {
-                                    tarefaServidor();
-                                    adicionarTarefa();
-                                }
-                                }>  {disabled ? 
+                                onClick={() => tarefaServidor()}>  
+                                {disabled ? 
                                     <ThreeDots
                                 height="30"
                                 width="40"

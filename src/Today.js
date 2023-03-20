@@ -13,7 +13,8 @@ export default function Today() {
     const { image, token } = useContext(InfoContext);
     const [Arraycheck, setArrayCheck] = useState([]);
     const [ check, setCheck] = useState(false);
-    console.log(tarefaGet)
+    const [contagem, setContagem] = useState(0);
+
 
     useEffect(() => {
 
@@ -32,8 +33,8 @@ export default function Today() {
     }, []);
     
 
-    function tarefaFeita() {
-        const urlCheck = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${tarefaGet[0].id}/check`;
+    function tarefaFeita(id) {
+        const urlCheck = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`;
 
         const data = {done: true}
 
@@ -54,8 +55,26 @@ export default function Today() {
         })
     }
 
-    // const idDaTarefa = (tarefaGet[0].id);
-    // tarefaFeita(idDaTarefa);
+    function desmarcarFeito(tarefaid){
+        const urlpost = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${tarefaid}/uncheck`;
+
+        const data = {done: false}
+
+        const config = {
+            headers:
+                { Authorization: `Bearer ${token}` }
+        }
+
+        const promisePost = axios.post(urlpost, data, config);
+        promisePost.then(res=> {
+            setArrayCheck(res.data);
+            setCheck(false);
+
+        })
+        promisePost.catch(err => {
+            console.log(err.response.data);
+        })
+    }
 
 
     return (
@@ -76,7 +95,9 @@ export default function Today() {
                         tarefaGet.map((t) =>
                             <CardToday 
                             tarefa={t} 
-                            done={tarefaFeita()}
+                            done={() => tarefaFeita(t.id)}
+                            notDone={()=> desmarcarFeito(t.id)}
+                            check={Arraycheck.includes(t.id)}
                             />
                         )
                     }

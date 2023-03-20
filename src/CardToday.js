@@ -1,7 +1,11 @@
+import { useState } from "react";
 import styled from "styled-components";
 import correto from "./assets/correto.png"
 
-export default function CardToday({ tarefa, done, check, setCheck }) {
+export default function CardToday({ tarefa, done, notDone, check}) {
+
+    const [isChecked, setIsChecked] = useState(check);
+    console.log(isChecked)
     return (
         <>
             <Card data-test="today-habit-container">
@@ -14,7 +18,19 @@ export default function CardToday({ tarefa, done, check, setCheck }) {
                     </span>
 
                 </div>
-                <button data-test="today-habit-check-btn" style={{backgroundColor: check === true ? '#8FC549' : '#EBEBEB'}} onClick={done}> <img src={correto}></img></button>
+                <button data-test="today-habit-check-btn" style={{backgroundColor: isChecked ? '#8FC549' : '#EBEBEB'}} 
+                onClick={() => {
+                    setIsChecked(!isChecked);
+                    if(isChecked){
+                        notDone();
+                    } else{
+                        done();
+                    }
+                    
+                }
+            }
+                > 
+                <img src={correto}></img></button>
             </Card>
         </>
     )

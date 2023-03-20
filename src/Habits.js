@@ -35,6 +35,31 @@ export default function Habits() {
         setHabitos(novaTarefaArray);
         setTextInput("");
         setMostrarCriar(false);
+        setDisabled(true);
+        setSelected([]);
+    }
+
+    function tarefaServidor() {
+        const urlPost = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
+        const config = {
+            headers:
+                { Authorization: `Bearer ${token}` }
+        }
+
+        const body = { name: textInput, days: selecionado };
+
+        const promise = axios.post(urlPost, body, config);
+        promise.then(res => {
+            setHabitos(res.data);
+            adicionarTarefa();
+            setDisabled(false);
+        }
+
+        );
+        promise.catch(err => {
+            alert(err.response.data.mensagem);
+            setDisabled(false);
+        });
     }
 
     useEffect(() => {
@@ -53,31 +78,7 @@ export default function Habits() {
             })
         promise.catch(err => alert(err.response.data.mensagem))
 
-    }, [])
-
-    function tarefaServidor() {
-
-        const urlPost = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
-
-        const config = {
-            headers:
-                { Authorization: `Bearer ${token}` }
-        }
-
-        const body = { name: textInput, days: selecionado };
-
-        const promise = axios.post(urlPost, body, config);
-        promise.then(res => {
-            setHabitos(res.data);
-            setDisabled(true);
-        }
-
-        );
-        promise.catch(err => {
-            alert(err.response.data.mensagem);
-            setDisabled(false);
-        });
-    }
+    }, [habitos])
 
   function deletePost(id){
     const urlDelete = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`;
