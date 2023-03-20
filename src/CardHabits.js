@@ -37,7 +37,6 @@ export default function CardHabits({ textInput, setTextInput, adicionarTarefa, M
                                     disabled={disabled}
                                     onClick={() => {
                                         handleButton(b.id);
-                                        selected.includes(b.id);
                                     }
                                     }
                                 > {b.dia} </button>

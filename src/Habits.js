@@ -27,6 +27,8 @@ export default function Habits() {
         }
     }
 
+    
+
 
     function adicionarTarefa(){
         const novaTarefaArray = [...habitos, textInput];
@@ -67,7 +69,6 @@ export default function Habits() {
         const promise = axios.post(urlPost, body, config);
         promise.then(res => {
             setHabitos(res.data);
-            console.log(novaTarefa)
             setDisabled(true);
         }
 
@@ -78,16 +79,20 @@ export default function Habits() {
         });
     }
 
-  function deletePost(){
-
-    const urlDelete = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${habitos.id}`;
-    
+  function deletePost(id){
+    const urlDelete = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`;
     const config = {
         headers:
             { Authorization: `Bearer ${token}` }
     }
 
-      axios.delete(urlDelete, config);
+     const promise = axios.delete(urlDelete, config);
+     promise.then(res => {
+        const novaListaDeHabitos = habitos.filter(habito => habito.id !== id);
+        setHabitos(novaListaDeHabitos);
+        
+     })
+     promise.catch(err => console.log(err.response.data.mensagem));
    }
 
     console.log(habitos)
@@ -125,9 +130,11 @@ export default function Habits() {
 
                     {habitos.map((task) =>
                     <LittleCard 
+                    key={task.id}
+                    id={task.id}
                     name={task.name}
                     task={task.days}
-                    deletepost={deletePost()}
+                    deletepost={deletePost}
                     
 
                       />

@@ -2,7 +2,7 @@ import lixeira from "./assets/lixeira.png";
 import styled from "styled-components";
 import botoes from "./botoes";
 
-export default function LittleCard({ name, task, deletepost }) {
+export default function LittleCard({ name, task, deletepost, id }) {
 
 
     return (
@@ -30,7 +30,7 @@ export default function LittleCard({ name, task, deletepost }) {
 
                         </div>
                     </span>
-                    <img data-test="habit-delete-btn" onClick={() => deletepost} src={lixeira}></img>
+                    <img data-test="habit-delete-btn" src={lixeira} onClick={() => deletepost(id)} ></img>
                 </LittleCards>
             </ContainerLittle>
         </>
